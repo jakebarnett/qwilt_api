@@ -1,0 +1,3 @@
+TranslationsController < ApplicationController
+	
+end

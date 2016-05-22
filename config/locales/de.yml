@@ -1,0 +1,16 @@
+de:
+   projects:
+     index:
+       title: 'Liste von Projekte'
+       subtitle: 'in der Rohrleitung.'
+       action: 'Aktion'
+   activerecord:
+     attributes:
+       project:
+         name: 'Name'
+         description: 'Beschreibung'
+         start_date: 'Anfangsdatum'
+         projected_end_date: 'Projizierte Enddatum'
+         actual_end_date: 'Tatsächliche Enddatum'
+         budget: 'Budget'
+         cost: 'Koste'

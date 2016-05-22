@@ -1,0 +1,16 @@
+es:
+  projects:
+    index:
+      title: 'lista de Proyectos'
+      subtitle: 'en la tuberia.'
+      action: 'Acción'
+  activerecord:
+    attributes:
+      project:
+        name: 'Nombre'
+        description: 'Descripción'
+        start_date: 'Fecha de inicio'
+        projected_end_date: 'Fecha de finalización proyectada'
+        actual_end_date: 'Fecha de finalización real'
+        budget: 'Presupuesto'
+        cost: 'Costo'
