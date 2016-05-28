@@ -50,5 +50,6 @@ class ProjectsController < ApplicationController
 	def delete_project
 		project = Project.find(params[:id])
 		project.destroy!
+		render json: project, status: 200
 	end
 end
