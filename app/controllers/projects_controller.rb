@@ -22,7 +22,7 @@ class ProjectsController < ApplicationController
 	private
 	
 	def get_projects
-		projects = Project.all
+		projects = Project.all.order(created_at: :desc)
 		render json: projects, status: 200
 	end
 	

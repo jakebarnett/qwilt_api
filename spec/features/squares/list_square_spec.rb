@@ -1,72 +1,64 @@
 require 'rails_helper'
+require 'byebug'
 
 RSpec.describe "the sqaures endpoint", :type => :request do
+	before :all do
+		@project = Project.create!(title: "project1", description: "this is a test")
+	end
+	
 	it "returns a list of square for a given project" do
-		project = Project.create!(title: "project1", description: "this is a test")
-		square = project.squares.create!(title: "test1", position: [4,4])
-		square2 = project.squares.create!(title: "test2", position: [3,3])
-		
-		get "/projects/#{project.id}/squares"
-		
+		get "/projects/#{@project.id}/squares"
+				
 		body = JSON.parse(response.body)
 		expect(response.status).to eq 200
-		expect(body[0]["title"]).to eq "test1"
-		expect(body[0]["position"]).to eq [4,4]
-		expect(body[1]["title"]).to eq "test2"
-		expect(body[1]["position"][0]).to eq 3
+		expect(body[0]["position"]).to eq 0
+		expect(body[99]["position"]).to eq 99
 	end
 	
 	it "returns a specific square " do
-		project = Project.create!(title: "project1", description: "this is a test")
-		square = project.squares.create!(title: "test1", position: [4,4])
+		square_id = @project.squares.where(position: 44)[0].id
 		
-		get "/projects/#{project.id}/squares/#{square.id}"
+		get "/projects/#{@project.id}/squares/#{square_id}"
 		
 		body = JSON.parse(response.body)
 		expect(response.status).to eq 200
-		expect(body["title"]).to eq "test1"
-		expect(body["position"]).to eq [4,4]
+		expect(body["position"]).to eq 44
+		expect(body["usable"]).to eq true
 	end
 	
-	it "can create a square" do
-		project = Project.create!(title: "project1", description: "this is a test")
-		post "/projects/#{project.id}/squares", title: "Test Square", position: [1,2]
+	# should we create all squares when the project is created?
+	xit "can create a square" do
+		post "/projects/#{@project.id}/squares", title: "Test Square", position: 12
 		
 		body = JSON.parse(response.body)
 		expect(response.status).to eq 200
 		expect(body["title"]).to eq "Test Square"
-		expect(body["position"]).to eq [1,2]
+		expect(body["position"]).to eq 12
 	end
 	
 	it "can update an existing square" do
-		project = Project.create!(title: "project1", description: "this is a test")
-		square = project.squares.create!(title: "test1", position: [4,4])
-		expect(square.title).to eq "test1"
-		expect(square.position).to eq [4,4]
-		
-		put "/projects/#{project.id}/squares/#{square.id}", title: "CHANGED", position: [2,3]
+		square = @project.squares.where(position: 44)[0]
+
+		put "/projects/#{@project.id}/squares/#{square.id}", title: "CHANGED", used: true
 
 		body = JSON.parse(response.body)
 		expect(response.status).to eq 200
 		expect(body["title"]).to eq "CHANGED"
-		expect(body["position"]).to eq [2,3]
+		expect(body["used"]).to eq true
 		
 		square.reload
 		expect(square.title).to eq "CHANGED"
-		expect(square.position).to eq [2,3]
+		expect(square.used).to eq true
 	end
 	
-	it "can delete a square" do
-		project = Project.create!(title: "project1", description: "this is a test")
-		square = project.squares.create!(title: "test1", position: [4,4])
-		
-		delete "/projects/#{project.id}/squares/#{square.id}"
+	# users dont need to delete squares
+	xit "can delete a square" do
+		delete "/projects/#{@project.id}/squares/44"
 		
 		expect(Square.where(id: square.id).count).to be 0
 		
 		body = JSON.parse(response.body)
 		expect(response.status).to eq 200
-		expect(body["title"]).to eq "test1"
-		expect(body["position"]).to eq [4,4]
+		expect(body["position"]).to eq 44
 	end
 end

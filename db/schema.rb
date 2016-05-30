@@ -25,10 +25,12 @@ ActiveRecord::Schema.define(version: 20160528055409) do
 
   create_table "squares", force: :cascade do |t|
     t.string   "title"
-    t.integer  "position",   default: [],              array: true
+    t.integer  "position"
+    t.boolean  "used",       default: false
+    t.boolean  "usable",     default: false
     t.integer  "project_id"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.index ["project_id"], name: "index_squares_on_project_id", using: :btree
   end
 

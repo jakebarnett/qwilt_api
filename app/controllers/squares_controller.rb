@@ -26,7 +26,7 @@ class SquaresController < ApplicationController
 	private
 	
 	def get_project_squares
-		squares = Project.find(params[:project_id]).squares
+		squares = Project.find(params[:project_id]).squares.order(position: :asc)
 		render json: squares, status: 200
 	end
 	
@@ -45,8 +45,8 @@ class SquaresController < ApplicationController
 	
 	def update_square
 		square = Project.find(params[:project_id]).squares.find(params[:id])
-		square.title = params[:title]
-		square.position = params[:position]
+		square.title = params[:title] if params[:title]
+		square.used = params[:used] if params[:used]
 		square.save
 		render json: square, status: 200
 	end

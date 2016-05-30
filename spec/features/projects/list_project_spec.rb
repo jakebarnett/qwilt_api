@@ -8,10 +8,10 @@ RSpec.describe 'the projects endpoints:', :type => :request do
 		get '/projects'
 		body = JSON.parse(response.body)
 		expect(response.status).to eq 200
-		expect(body[0]["title"]).to eq "project1"
-		expect(body[0]["description"]).to eq "this is a test"
-		expect(body[1]["title"]).to eq "project2"
-		expect(body[1]["description"]).to eq "this is another test"
+		expect(body[1]["title"]).to eq "project1"
+		expect(body[1]["description"]).to eq "this is a test"
+		expect(body[0]["title"]).to eq "project2"
+		expect(body[0]["description"]).to eq "this is another test"
 	end
 	
 	it "get /projects/:id lists a specific project" do
