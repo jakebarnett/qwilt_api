@@ -1,5 +1,3 @@
-require 'byebug'
-
 class SquaresController < ApplicationController
 	
 	def index
