@@ -1,47 +1,53 @@
 require 'rails_helper'
 
-RSpec.describe 'the projects endpoints:', :type => :request do
-	it "get /projects list all projects" do
-		Project.create!(title: "project1", description: "this is a test")
-		Project.create!(title: "project2", description: "this is another test")
+RSpec.describe 'the projects endpoints #get', :type => :request do
+	context "when logged in" do
+		before :all do
+			@user = User.create(username:"jake", email:"jake@test.com", password:"1234")
+			login(@user.id, @user.password)
+			
+			@project1 = Project.create!(title: "project1", description: "this is a test")
+			@project2 = Project.create!(title: "project2", description: "this is another test")
+			@project3 = Project.create!(title: "project3", description: "test user is not subscribed")
+			
+			@project1.users << @user
+			@project2.users << @user
+		end
 		
-		get '/projects'
-		body = JSON.parse(response.body)
-		expect(response.status).to eq 200
-		expect(body[1]["title"]).to eq "project1"
-		expect(body[1]["description"]).to eq "this is a test"
-		expect(body[0]["title"]).to eq "project2"
-		expect(body[0]["description"]).to eq "this is another test"
-	end
-	
-	it "get /projects/:id lists a specific project" do
-		project = Project.create!(title: "project1", description: "this is a test")
+		it "lists all projects for the current user" do
+			get_with_auth '/projects'
+			
+			body = JSON.parse(response.body)
+			expect(response.status).to eq 200
+			expect(body[1]["title"]).to eq "project1"
+			expect(body[1]["description"]).to eq "this is a test"
+			expect(body[0]["title"]).to eq "project2"
+			expect(body[0]["description"]).to eq "this is another test"
+		end
 		
-		get "/projects/#{project.id}"
-		body = JSON.parse(response.body)
-		expect(response.status).to eq 200
-		expect(body["title"]).to eq "project1"
-		expect(body["description"]).to eq "this is a test"
-	end
-	
-	it "post /project creates a new project" do
-		post "/projects", title: "Post Test", description: "description"
-		expect(response.status).to eq 200
+		it "doesn't list projects where current user is not subscribed" do
+			get_with_auth '/projects'
+			
+			body = JSON.parse(response.body)
+			expect(response.status).to eq 200
+			expect(body.map { |p| p["title"] }).to_not include("project3")
+		end
 		
-		id = JSON.parse(response.body)["id"]
-		get "/projects/#{id}"
-		body = JSON.parse(response.body)
-		expect(body["title"]).to eq "Post Test"
-		expect(body["description"]).to eq "description"
+		it "lists a specific project" do
+			get_with_auth "/projects/#{@project1.id}"
+			
+			body = JSON.parse(response.body)
+			expect(response.status).to eq 200
+			expect(body["title"]).to eq "project1"
+			expect(body["description"]).to eq "this is a test"
+		end
+		
+		it "returns 401 for a project the current user is not subscribed to" do
+			get_with_auth "/projects/#{@project3.id}"
+			
+			body = JSON.parse(response.body)
+			expect(response.status).to eq 401
+			expect(response.body).to eq '{"error":"unauthorized"}'
+		end
 	end
-	
-	it "puts /project/:id updates a project" do
-		post "/projects", title: "Post Test", description: "description"
-		id = JSON.parse(response.body)["id"]
-		put "/projects/#{id}", title: "updated title", description: "updated_description"
-		body = JSON.parse(response.body)
-		expect(body["title"]).to eq "updated title"
-		expect(body["description"]).to eq "updated_description"
-	end
-	
 end

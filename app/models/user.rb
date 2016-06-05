@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
   has_secure_password
+  has_many :projects, through: :subscriptions
+  has_many :subscriptions
 
   def create_password_reset
     generate_token(:password_reset_token)

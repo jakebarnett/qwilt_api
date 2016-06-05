@@ -1,5 +1,7 @@
 class Project < ApplicationRecord
 	has_many :squares, dependent: :destroy
+	has_many :users, through: :subscriptions
+	has_many :subscriptions
 	
 	after_create :build_squares
 	

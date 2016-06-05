@@ -1,4 +1,5 @@
 class SquaresController < ApplicationController
+	before_action :authenticate_request!
 	
 	def index
 		get_project_squares
@@ -16,16 +17,20 @@ class SquaresController < ApplicationController
 		update_square
 	end
 	
-	def destroy
-		delete_square
-	end
+	# def destroy
+	# 	delete_square
+	# end
 	
 	
 	private
 	
 	def get_project_squares
-		squares = Project.find(params[:project_id]).squares.order(position: :asc)
-		render json: squares, status: 200
+		if check_subscription
+			squares = Project.find(params[:project_id]).squares.order(position: :asc)
+			render json: squares, status: 200
+		else
+			render json: { error: "unauthorized" }, status: 401
+		end
 	end
 	
 	def get_square
@@ -42,16 +47,28 @@ class SquaresController < ApplicationController
 	end
 	
 	def update_square
-		square = Project.find(params[:project_id]).squares.find(params[:id])
-		square.title = params[:title] if params[:title]
-		square.used = params[:used] if params[:used]
-		square.save
-		render json: square, status: 200
+		if ["admin", "owner"].include? check_subscription
+			square = Project.find(params[:project_id]).squares.find(params[:id])
+			square.title = params[:title] if params[:title]
+			square.used = params[:used] if params[:used]
+			square.save
+			render json: square, status: 200
+		else
+			render json: { error: "unauthorized" }, status: 401
+		end
 	end
 	
-	def delete_square
-		square = Project.find(params[:project_id]).squares.find(params[:id])
-		square.destroy!
-		render json: square, status: 200
+	# for now, we don't want users to delete a square.
+	# def delete_square
+	# 	square = Project.find(params[:project_id]).squares.find(params[:id])
+	# 	square.destroy!
+	# 	render json: square, status: 200
+	# end
+	
+	def check_subscription
+		project = Project.find(params[:project_id])
+		sub = project.subscriptions.find_by(user_id: current_user.id)
+		return sub[:role] if sub
+		false
 	end
 end
