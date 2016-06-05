@@ -16,8 +16,8 @@ RSpec.describe "the sqaures endpoint get", :type => :request do
 	
 	context "when logged in" do
 		before :all do
-			@user = User.create(username:"jake", email:"jake@test.com", password:"1234")
-			login(@user.id, @user.password)
+			@user = User.create(username:Faker::Internet.user_name, email:"jake@test.com", password:"1234")
+			login(@user.username, @user.password)
 			@project1.users << @user
 		end
 		

@@ -11,6 +11,7 @@ class UsersController < ApplicationController
 			email: params[:email],
 			password: params[:password],
 		)
+		render json: user, status: 200
 	end
 
 end

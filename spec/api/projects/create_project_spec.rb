@@ -12,8 +12,8 @@ RSpec.describe 'the projects endpoints #post', :type => :request do
 
 	context "when logged in" do
 		before :all do
-			@user = User.create(username:"jake", email:"jake@test.com", password:"1234")
-			login(@user.id, @user.password)
+			@user = User.create(username:Faker::Internet.user_name, email:"jake@test.com", password:"1234")
+			login(@user.username, @user.password)
 		end
 		
 		it "it responds with a 200 and the new project info" do

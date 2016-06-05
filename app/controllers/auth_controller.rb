@@ -5,7 +5,7 @@ class AuthController < ApplicationController
     # You'll need to implement the below method. It should return the
     # user instance if the username and password are valid.
     # Otherwise return nil.
-    user = User.find_by(id: params[:id])
+    user = User.find_by(username: params[:username])
     if user && user.authenticate(params[:password])
       render json: authentication_payload(user)
     else

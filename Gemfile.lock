@@ -52,6 +52,9 @@ GEM
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     i18n (0.7.0)
+    jbuilder (2.5.0)
+      activesupport (>= 3.0.0, < 5.1)
+      multi_json (~> 1.2)
     json (1.8.3)
     jwt (1.5.4)
     listen (3.0.7)
@@ -67,6 +70,7 @@ GEM
     mime-types-data (3.2016.0221)
     mini_portile2 (2.0.0)
     minitest (5.8.4)
+    multi_json (1.12.1)
     nio4r (1.2.1)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
@@ -143,10 +147,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bcrypt
+  bcrypt (~> 3.1.7)
   byebug
   database_cleaner
   faker
+  jbuilder (~> 2.0)
   jwt
   listen (~> 3.0.5)
   pg (~> 0.18)
@@ -155,7 +160,6 @@ DEPENDENCIES
   rails (>= 5.0.0.rc1, < 5.1)
   redis
   rspec-rails (~> 3.0)
-  tzinfo-data
 
 BUNDLED WITH
    1.12.3

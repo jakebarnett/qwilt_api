@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
 	
 	def create
 		create_project
-		assign_admin
+		assign_owner
 	end
 	
 	def update
@@ -25,8 +25,8 @@ class ProjectsController < ApplicationController
 	private
 	
 	def get_projects
-		projects = @current_user.projects.order(created_at: :desc)
-		render json: projects, status: 200
+		@projects = @current_user.projects.order(created_at: :desc)
+		render status: 200
 	end
 	
 	def get_project
@@ -46,7 +46,7 @@ class ProjectsController < ApplicationController
 		render json: @project, status: 200
 	end
 	
-	def assign_admin
+	def assign_owner
 		Subscription.create(
 			project_id: @project.id,
 			user_id: @current_user.id,

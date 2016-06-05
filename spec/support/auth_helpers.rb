@@ -1,8 +1,8 @@
 require 'byebug'
 
 module AuthHelpers
-	def login(id, password)
-		post '/authenticate', params: { id:"#{id}", password:"#{password}" }
+	def login(username, password)
+		post '/authenticate', params: { username:"#{username}", password:"#{password}" }
 		body = JSON.parse(response.body)
 		@token = body["auth_token"]
 	end

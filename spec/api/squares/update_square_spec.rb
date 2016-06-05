@@ -16,8 +16,8 @@ RSpec.describe "the square endpoint #put:", :type => :request do
 	
 	context "when logged in" do
 		it "if the current user is an admin, it can update an existing square" do
-			@user1 = User.create(username:"jake", email:"jake@test.com", password:"1234")
-			login(@user1.id, @user1.password)
+			@user1 = User.create(username:Faker::Internet.user_name, email:"jake@test.com", password:"1234")
+			login(@user1.username, @user1.password)
 			Subscription.create(project_id: @project1.id, user_id: @user1.id, role: "admin")
 
 			square = @project1.squares.where(position: 44)[0]
@@ -33,8 +33,8 @@ RSpec.describe "the square endpoint #put:", :type => :request do
 		end
 		
 		it "if the current user is the owner, it can update an existing square" do
-			@user2 = User.create(username:"jake", email:"jake@test.com", password:"1234")
-			login(@user2.id, @user2.password)
+			@user2 = User.create(username:Faker::Internet.user_name, email:"jake@test.com", password:"1234")
+			login(@user2.username, @user2.password)
 			Subscription.create(project_id: @project1.id, user_id: @user2.id, role: "owner")
 
 			square = @project1.squares.where(position: 44)[0]
@@ -50,8 +50,8 @@ RSpec.describe "the square endpoint #put:", :type => :request do
 		end
 		
 		it "if the current user is a collaborator, it can not update an existing square" do
-			@user3 = User.create(username:"jake", email:"jake@test.com", password:"1234")
-			login(@user3.id, @user3.password)
+			@user3 = User.create(username:Faker::Internet.user_name, email:"jake@test.com", password:"1234")
+			login(@user3.username, @user3.password)
 			Subscription.create(project_id: @project1.id, user_id: @user3.id, role: "collaborator")
 
 			square = @project1.squares.where(position: 44)[0]

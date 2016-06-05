@@ -12,8 +12,8 @@ RSpec.describe "the projects enpoints #delete", :type => :request do
 	
 	context "when logged in" do
 		before :all do
-			@user = User.create(username:"jake", email:"jake@test.com", password:"1234")
-			login(@user.id, @user.password)
+			@user = User.create(username:Faker::Internet.user_name, email:"jake@test.com", password:"1234")
+			login(@user.username, @user.password)
 	
 			@project1 = Project.create!(title: "project1", description: "this is a test")
 			@project2 = Project.create!(title: "project2", description: "this is another test")
@@ -26,7 +26,7 @@ RSpec.describe "the projects enpoints #delete", :type => :request do
 			expect(response.status).to eq 401
 		end
 	
-		it "deletes a project if the current user is the owner" do		
+		it "deletes a project if the current user is the owner" do
 			expect{
 				delete_with_auth "/projects/#{@project1.id}"
 			}.to change{ Project.count }.by(-1)
